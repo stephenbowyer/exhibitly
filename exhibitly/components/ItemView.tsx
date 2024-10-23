@@ -1,6 +1,6 @@
 import React, {FC, useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, Dimensions} from 'react-native';
-import { useParams } from "react-router-native";
+import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Alert} from 'react-native';
+import { useParams, useNavigate } from "react-router-native";
 import { fetchItem } from '../utils';
 
 const windowDimensions = Dimensions.get('window');
@@ -11,6 +11,7 @@ const ItemView:FC = ()  => {
     const [dimensions, setDimensions] = useState({window: windowDimensions, screen: screenDimensions});
     const [itemObj, setItemObj] = useState(new Array());
     const [imgURL, setImgURL] = useState("./assets/icon.png");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const subscription = Dimensions.addEventListener(
@@ -30,6 +31,14 @@ const ItemView:FC = ()  => {
         }).catch((result) => {
             console.log("ERROR", result);
         });
+    }, []);
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+          'hardwareBackPress',
+          () => { navigate('/'); return true;},
+        );
+        return () => backHandler.remove();
     }, []);
     
     console.log(imgURL);
