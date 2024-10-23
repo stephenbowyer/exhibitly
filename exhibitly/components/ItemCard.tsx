@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
+import {Link} from "react-router-native";
 import {ItemsArray} from '../utils';
 
 interface ItemCardProps {
@@ -11,13 +12,16 @@ const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
     const imgURL = 'https://www.artic.edu/iiif/2/'+itemObj.image_id+'/full/843,/0/default.jpg';
     return (
         <View style={styles.item}>
+            <Link to={`/item/${itemObj.id}`}>
             <Image style={styles.itemImage} source={{ uri: imgURL }} />
+            </Link>
             <View style={styles.itemAdd}>
                 <Text style={styles.itemAddText}>Add</Text>
             </View>
         </View>
     )
 }
+
 const styles = StyleSheet.create({
     item: {
         padding: 3

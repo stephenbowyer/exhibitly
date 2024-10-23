@@ -7,7 +7,6 @@ import ItemView from "./components/ItemView";
 
 //export default function App() {
 const App = () => {
-  const item_id = "129884";
   return (
     <View style={styles.container}>
       <NativeRouter>
@@ -15,7 +14,7 @@ const App = () => {
       <StatusBar style="auto" />
         <Routes>
         <Route path='/' Component={CollectionList} />
-        <Route path='/item' element={ItemView({item_id})} />
+        <Route path='/item/:item_id' Component={ItemView} /> 
         <Route path='/login' Component={Header} />
         </Routes>
       </NativeRouter>

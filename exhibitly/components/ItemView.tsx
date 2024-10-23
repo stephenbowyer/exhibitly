@@ -1,15 +1,13 @@
 import React, {FC, useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, Dimensions} from 'react-native';
+import { useParams } from "react-router-native";
 import { fetchItem } from '../utils';
-
-interface ItemViewProps {
-    item_id: String;
-}
 
 const windowDimensions = Dimensions.get('window');
 const screenDimensions = Dimensions.get('screen');
 
-const ItemView:FC<ItemViewProps> = ({item_id})  => {
+const ItemView:FC = ()  => {
+    const {item_id} = useParams();
     const [dimensions, setDimensions] = useState({window: windowDimensions, screen: screenDimensions});
     const [itemObj, setItemObj] = useState(new Array());
     const [imgURL, setImgURL] = useState("./assets/icon.png");
@@ -41,8 +39,8 @@ const ItemView:FC<ItemViewProps> = ({item_id})  => {
 
     return (
         <View style={styles.item}>
-            <Text style={styles.itemText}>Artist: {itemObj.artist_title}</Text>
-            <Text style={styles.itemText}>Title: {itemObj.title}</Text>
+            <Text style={styles.itemTitleText}>{itemObj.title}</Text>
+            <Text style={styles.itemArtistText}>{itemObj.artist_title}</Text>
             <Image style={styles.itemImage} source={{ uri: imgURL }} />
             <View style={styles.itemAdd}>
                 <Text style={styles.itemAddText}>Add</Text>
@@ -54,17 +52,25 @@ const styles = StyleSheet.create({
     item: {
         position: 'absolute',
         top: 25,
-        borderWidth: 1,
+//        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
     itemText: {
         fontSize: 20,
         fontWeight: '300',
-        borderWidth: 1,
+//        borderWidth: 1,
+    },
+    itemTitleText: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    itemArtistText: {
+        fontSize: 18,
+        fontWeight: '300',
     },
     itemImage: {
-        borderWidth: 1,
+//        borderWidth: 1,
         justifyContent: 'flex-start',
         borderRadius: 15,
         resizeMode: 'cover',
