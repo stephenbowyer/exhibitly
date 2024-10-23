@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'center',
-      backgroundColor: '#3266a8'
     },
 });
 export default CollectionList;
