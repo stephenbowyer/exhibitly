@@ -11,7 +11,7 @@ const App = () => {
     <View style={styles.container}>
       <NativeRouter>
       <Header />
-      <StatusBar style="auto" />
+      <StatusBar hidden />
         <Routes>
         <Route path='/' Component={CollectionList} />
         <Route path='/item/:item_id' Component={ItemView} /> 
