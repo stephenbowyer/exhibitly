@@ -32,6 +32,7 @@ export const fetchItems = () => {
 export const fetchItem = (itemId: String) => {
     return chicagoApi.get(`/artworks/${itemId}`)
         .then((response: AxiosResponse): ItemsResponse => {
+//            console.log(response.data);
             return response.data;
         })
 }
