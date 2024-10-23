@@ -10,8 +10,8 @@ const App = () => {
   return (
     <View style={styles.container}>
       <NativeRouter>
-      <Header />
-      <StatusBar hidden />
+        <StatusBar hidden />
+        <Header />
         <Routes>
         <Route path='/' Component={CollectionList} />
         <Route path='/item/:item_id' Component={ItemView} /> 
@@ -25,9 +25,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#3266a8',
   },
 });
 

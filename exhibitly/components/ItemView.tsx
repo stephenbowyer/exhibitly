@@ -1,14 +1,13 @@
 import React, {FC, useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Alert} from 'react-native';
+import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Pressable} from 'react-native';
 import { useParams, useNavigate } from "react-router-native";
 import { fetchItem } from '../utils';
 
 const windowDimensions = Dimensions.get('window');
-const screenDimensions = Dimensions.get('screen');
 
 const ItemView:FC = ()  => {
     const {item_id} = useParams();
-    const [dimensions, setDimensions] = useState({window: windowDimensions, screen: screenDimensions});
+    const [dimensions, setDimensions] = useState({window: windowDimensions});
     const [itemObj, setItemObj] = useState(new Array());
     const [imgURL, setImgURL] = useState("./assets/icon.png");
     const navigate = useNavigate();
@@ -16,7 +15,7 @@ const ItemView:FC = ()  => {
     useEffect(() => {
         const subscription = Dimensions.addEventListener(
           'change',
-          ({window, screen}) => {setDimensions({window, screen})},
+          ({window}) => {setDimensions({window})},
         );
         return () => subscription?.remove();
       });
@@ -48,38 +47,44 @@ const ItemView:FC = ()  => {
 
     return (
         <View style={styles.item}>
-            <Text style={styles.itemTitleText}>{itemObj.title}</Text>
-            <Text style={styles.itemArtistText}>{itemObj.artist_title}</Text>
+            <View style={styles.itemText}>
+                <Text style={styles.itemTitleText}>{itemObj.title}</Text>
+                <Text style={styles.itemArtistText}>{itemObj.artist_title}</Text>
+            </View>
             <Image style={styles.itemImage} source={{ uri: imgURL }} />
             <View style={styles.itemAdd}>
-                <Text style={styles.itemAddText}>Add</Text>
+                <Pressable style={styles.itemAddPress}>
+                    <Text style={styles.itemAddText}>Add</Text>
+                </Pressable>
             </View>
         </View>
     )
 }
 const styles = StyleSheet.create({
     item: {
-        position: 'absolute',
-        top: 25,
-//        borderWidth: 1,
+        width: windowDimensions.width,
         alignItems: 'center',
         justifyContent: 'center',
     },
     itemText: {
-        fontSize: 20,
-        fontWeight: '300',
-//        borderWidth: 1,
+        width: windowDimensions.width,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
     },
     itemTitleText: {
         fontSize: 20,
-        fontWeight: '600',
+        fontWeight: '900',
+        color: '#fff',
     },
     itemArtistText: {
         fontSize: 18,
-        fontWeight: '300',
+        fontWeight: '400',
+        color: '#fff',
     },
     itemImage: {
-//        borderWidth: 1,
+        borderWidth: 2.5,
+        borderColor: '#3030dd',
         justifyContent: 'flex-start',
         borderRadius: 15,
         resizeMode: 'cover',
@@ -90,14 +95,32 @@ const styles = StyleSheet.create({
     },
     itemAdd: {
         position: 'absolute',
-        top: 0, left: 0, right: 10, bottom: 0,
+        top: 0, left: 0, bottom: 33, right: 10,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
+    itemAddPress: {
+        borderRadius: 10,
+    
+        backgroundColor: '#8080ff',
+        height: 30,
+        width: 40,
+
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        borderColor: '#5050ff',
+        borderLeftWidth: 0,
+        borderTopWidth: 0,
+        borderBottomWidth: 3,
+        borderRightWidth: 3,
+
+    },
     itemAddText: {
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: '600'
     }
+ 
 });
 
 export default ItemView;
