@@ -6,7 +6,7 @@ import { fetchItem } from '../utils';
 const windowDimensions = Dimensions.get('window');
 
 const ItemView:FC = ()  => {
-    const {item_id} = useParams();
+    const {museum, item_id} = useParams();
     const [dimensions, setDimensions] = useState({window: windowDimensions});
     const [itemObj, setItemObj] = useState(new Array());
     const [imgURL, setImgURL] = useState("./assets/icon.png");
@@ -21,10 +21,10 @@ const ItemView:FC = ()  => {
       });
 
     useEffect(() => {
-        fetchItem(item_id).then(item => {
-            setItemObj(item.data);
-            if (item.data.image_id)
-                setImgURL('https://www.artic.edu/iiif/2/'+item.data.image_id+'/full/843,/0/default.jpg');
+        fetchItem(museum, item_id).then(item => {
+            setItemObj(item);
+            if (item.imageURL)
+                setImgURL(item.imageURL);
             else
                 setImgURL("./assets/icon.png");
         }).catch((result) => {
@@ -39,23 +39,23 @@ const ItemView:FC = ()  => {
         );
         return () => backHandler.remove();
     }, []);
-    
-    console.log(imgURL);
 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-
     return (
         <View style={styles.item}>
             <View style={styles.itemText}>
                 <Text style={styles.itemTitleText}>{itemObj.title}</Text>
-                <Text style={styles.itemArtistText}>{itemObj.artist_title}</Text>
+                <Text style={styles.itemArtistText}>{itemObj.artistName}</Text>
             </View>
             <Image style={styles.itemImage} source={{ uri: imgURL }} />
             <View style={styles.itemAdd}>
                 <Pressable style={styles.itemAddPress}>
                     <Text style={styles.itemAddText}>Add</Text>
                 </Pressable>
+            </View>
+            <View style={styles.itemText}>
+                <Text style={styles.itemArtistText}>{itemObj.museumTitle}</Text>
             </View>
         </View>
     )

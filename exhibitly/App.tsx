@@ -14,7 +14,7 @@ const App = () => {
         <Header />
         <Routes>
         <Route path='/' Component={CollectionList} />
-        <Route path='/item/:item_id' Component={ItemView} /> 
+        <Route path='/item/:museum/:item_id' Component={ItemView} /> 
         <Route path='/login' Component={Header} />
         </Routes>
       </NativeRouter>

@@ -21,10 +21,10 @@ const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
         return () => subscription?.remove();
     });
 
-    const imgURL = 'https://www.artic.edu/iiif/2/'+itemObj.image_id+'/full/843,/0/default.jpg';
+    const imgURL = itemObj.imageURL;
     return (
         <View style={styles.item}>
-            <Link to={`/item/${itemObj.id}`}>
+            <Link to={`/item/${itemObj.museum}/${itemObj.id}`}>
             <Image style={styles.itemImage} source={{ uri: imgURL }} />
             </Link>
             <View style={styles.itemAdd}>
