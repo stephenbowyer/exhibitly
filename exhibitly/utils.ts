@@ -69,17 +69,17 @@ interface ItemsResponse {
     config: Object;
 }
 
-export const fetchAllItems = () => {
+export const fetchAllItems = (start:number = 0) => {
     const promises = new Array();
     museumList.forEach((museumName) => {
-        promises.push(fetchItems(museumName));
+        promises.push(fetchItems(museumName, start));
     });
     return Promise.all(promises);
 }
 
-export const fetchItems = (museumName:string = museumList[0]) => {
+export const fetchItems = (museumName:string = museumList[0], start:number = 0) => {
     const museum = museums[museumName];
-    const queryParams = {params: {limit: 10}, fields: `id, title, ${museum.imageField}, ${museum.artistField}`};
+    const queryParams = {params: {limit: 20, skip: start, page: Math.floor(start/10)}, fields: `id, title, ${museum.imageField}, ${museum.artistField}`};
     return museum.api.get('/artworks', queryParams)
         .then((response: AxiosResponse):ItemsArray => {
             response.data.data.forEach((item:ItemsArray) => setDetails(museumName, item, true));
