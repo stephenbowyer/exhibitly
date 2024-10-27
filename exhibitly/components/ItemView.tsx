@@ -1,5 +1,5 @@
 import React, {FC, useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Pressable} from 'react-native';
+import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Pressable, ScrollView} from 'react-native';
 import { useParams, useNavigate } from "react-router-native";
 import { fetchItem } from '../utils';
 
@@ -43,24 +43,30 @@ const ItemView:FC = ()  => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     return (
+        <ScrollView style={styles.scrollView}>
         <View style={styles.item}>
             <View style={styles.itemText}>
                 <Text style={styles.itemTitleText}>{itemObj.title}</Text>
                 <Text style={styles.itemArtistText}>{itemObj.artistName}</Text>
             </View>
-            <Image style={styles.itemImage} source={{ uri: imgURL }} />
-            <View style={styles.itemAdd}>
-                <Pressable style={styles.itemAddPress}>
-                    <Text style={styles.itemAddText}>Add</Text>
-                </Pressable>
+            <View>
+                <Image style={styles.itemImage} source={{ uri: imgURL }} />
+                <View style={styles.itemAdd}>
+                    <Pressable style={styles.itemAddPress}>
+                        <Text style={styles.itemAddText}>Add</Text>
+                    </Pressable>
+                </View>
             </View>
             <View style={styles.itemText}>
                 <Text style={styles.itemArtistText}>{itemObj.museumTitle}</Text>
             </View>
         </View>
+        </ScrollView>
     )
 }
 const styles = StyleSheet.create({
+    scrollView: {
+    },
     item: {
         width: windowDimensions.width,
         alignItems: 'center',
@@ -68,17 +74,20 @@ const styles = StyleSheet.create({
     },
     itemText: {
         width: windowDimensions.width,
+        textAlign:'center',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
     },
     itemTitleText: {
         fontSize: 20,
+        textAlign:'center',
         fontWeight: '900',
         color: '#fff',
     },
     itemArtistText: {
         fontSize: 18,
+        textAlign:'center',
         fontWeight: '400',
         color: '#fff',
     },
@@ -95,7 +104,7 @@ const styles = StyleSheet.create({
     },
     itemAdd: {
         position: 'absolute',
-        top: 0, left: 0, bottom: 33, right: 10,
+        top: 0, left: 0, bottom: 5, right: 5,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
