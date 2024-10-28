@@ -2,6 +2,8 @@ import React, {FC, useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, Dimensions, BackHandler, Pressable, ScrollView} from 'react-native';
 import { useParams, useNavigate } from "react-router-native";
 import { fetchItem } from '../utils';
+import AddMenu from "./AddMenu";
+import CollectionMenu from './CollectionMenu';
 
 const windowDimensions = Dimensions.get('window');
 
@@ -44,6 +46,7 @@ const ItemView:FC = ()  => {
     const windowHeight = Dimensions.get('window').height;
     return (
         <ScrollView style={styles.scrollView}>
+        <CollectionMenu />
         <View style={styles.item}>
             <View style={styles.itemText}>
                 <Text style={styles.itemTitleText}>{itemObj.title}</Text>
@@ -53,7 +56,7 @@ const ItemView:FC = ()  => {
                 <Image style={styles.itemImage} source={{ uri: imgURL }} />
                 <View style={styles.itemAdd}>
                     <Pressable style={styles.itemAddPress}>
-                        <Text style={styles.itemAddText}>Add</Text>
+                        <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj}/>
                     </Pressable>
                 </View>
             </View>
