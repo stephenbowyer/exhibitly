@@ -5,7 +5,7 @@ import UserDataContext from "../contexts/UserData";
 
 const windowDimensions = Dimensions.get('window');
 
-export const CollectionMenu:FC = ({back = true, create = true, search = true}) => {
+export const CollectionMenu:FC = ({back = true, create = true, search = true, setSearchBoxOpen}) => {
     const {userData, setUserData} = useContext(UserDataContext);
 
     const navigate = useNavigate();
@@ -13,17 +13,17 @@ export const CollectionMenu:FC = ({back = true, create = true, search = true}) =
     return (
         <View style={styles.buttons}>
             <View style={styles.createButton}>
-                <Pressable style={styles.createPress} onPress={() => {navigate('/')}}>
+                <Pressable style={styles.createPress} onPress={() => {navigate('/');}}>
                     <Text style={styles.createText}>All</Text>
                 </Pressable>
             </View>
             <View style={styles.createButton}>
-                <Pressable style={styles.createPress} onPress={() => {navigate('/collections')}}>
+                <Pressable style={styles.createPress} onPress={() => {navigate('/collections');}}>
                     <Text style={styles.createText}>Collections</Text>
                 </Pressable>
             </View>
             <View style={styles.createButton}>
-                <Pressable style={styles.createPress}>
+                <Pressable style={styles.createPress} onPress={() => {if (setSearchBoxOpen) setSearchBoxOpen(true);}}>
                     <Text style={styles.createText}>Search</Text>
                 </Pressable>
             </View>
