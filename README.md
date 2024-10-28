@@ -15,7 +15,7 @@ expo-status-bar react-router-native and react-native-popup-menu packages.
 
 ### Installation
 
-git clone https://github.com/stephenbowyer/exhibitly
-npm node install  
-npm run android
+ git clone https://github.com/stephenbowyer/exhibitly  
+ npm node install  
+ npm run android  
 
