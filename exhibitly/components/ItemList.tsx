@@ -3,6 +3,7 @@ import {StyleSheet, View, Text, ScrollView, ActivityIndicator} from 'react-nativ
 import { useParams } from "react-router-native";
 import { fetchAllItems, shuffleItems } from '../utils';
 import ItemCard from "./ItemCard";
+import ItemSearch from "./ItemSearch";
 import CollectionMenu from './CollectionMenu';
 import ItemDataContext from "../contexts/ItemData";
 import SystemDataContext from "../contexts/SystemData";
@@ -15,10 +16,13 @@ const ItemList:FC = ()  => {
     const {userData, setUserData} = useContext(UserDataContext);
     const [titleText, setTitleText] = useState('');
     const [loading, setLoading] = useState(true);
+    const [searchBoxOpen, setSearchBoxOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [lastSearchQuery, setLastSearchQuery] = useState('');
 
 
     const loadItems = () => {
-        if (!('username' in Object.keys(userData)))
+        if (!('username' in userData))
             setUserData({username: 'Stephen', secret: '',
                 customCollections: [{name: 'Collection A', items: []}]
             });
@@ -27,9 +31,9 @@ const ItemList:FC = ()  => {
             const newSystemData = systemData;
             setLoading(true);
             systemData['itemListLength'] = allItems.length;
-            fetchAllItems(allItems.length+1).then((items) => {
-                // shuffleItems(items);
-                if (items[0].hasOwnProperty('id'))
+            fetchAllItems(allItems.length+1, searchQuery).then((items) => {
+                shuffleItems(items);
+                if (typeof items[0] === 'object' && ('id' in items[0]))
                     setAllItems([...new Set([...allItems, ...items])]);
                 else
                     setAllItems([...new Set([...allItems, ...items.flat()])]);
@@ -58,34 +62,51 @@ const ItemList:FC = ()  => {
         }
         else
         {
-            if ((systemData['collectionLoads'] === 0) || (setAllItems.length === 0)){
-                if ('backupItems' in Object.keys(systemData) && systemData['backupItems'].length > 0){
+            if (lastSearchQuery !== searchQuery){
+                allItems.length = 0;
+                setAllItems(new Array());
+                if ('itemListLength' in systemData)
+                    delete systemData['itemListLength'];
+                systemData['collectionLoads'] === 0;
+                setSystemData(systemData);
+            }
+            if ((systemData['collectionLoads'] === 0) || (allItems.length === 0)){
+                if ('backupItems' in systemData && systemData['backupItems'].length > 0){
                     setLoading(true);
                     setAllItems(...systemData['backupItems']);
-                    systemData['backupItems'] = new Array();
+                    //systemData['backupItems'] = new Array();
+                    loadItems();
                     setLoading(false);
                 }
                 else
                 {
                     allItems.length = 0;
                     setAllItems(new Array());
-                    delete systemData['itemListLength'];
+                    if ('itemListLength' in systemData)
+                        delete systemData['itemListLength'];
                     setSystemData(systemData);
                     loadItems();
                 }
                 systemData['collectionLoads']++;
                 setSystemData(systemData);
-                setTitleText('All Items')
+                if (searchQuery.length === 0)
+                    setTitleText('All Items')
+                else
+                    setTitleText('Search Results')
             }
         }
-    }, []);
+    }, [searchQuery]);
     return (
         <ScrollView style={styles.scrollView} onScroll={savePosition} contentOffset={systemData['itemListOffset']}>
-            <CollectionMenu />
+            <CollectionMenu setSearchBoxOpen={setSearchBoxOpen} />
+            { searchBoxOpen ? <ItemSearch setSearchQuery={setSearchQuery} setSearchBoxOpen={setSearchBoxOpen} /> : <></> }
             <Text style={styles.collectionTitle}>{titleText}</Text>
+            { (typeof allItems === 'object' && allItems.length > 0) ?
                 <View style={styles.collections}>
                     {allItems?.map((item, index) => <ItemCard style={styles.card} itemObj={item} key={index} />)}
-                </View>
+                </View> :
+                <></>
+            }
             { loading ? <ActivityIndicator style={styles.activity} size="large" color="#fff" /> : 
             (allItems.length === 0) ? <Text style={styles.empty}>Empty</Text> : <></> }
         </ScrollView>

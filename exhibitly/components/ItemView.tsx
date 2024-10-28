@@ -11,7 +11,7 @@ const ItemView:FC = ()  => {
     const {museum, item_id} = useParams();
     const [dimensions, setDimensions] = useState({window: windowDimensions});
     const [itemObj, setItemObj] = useState(new Array());
-    const [imgURL, setImgURL] = useState("./assets/icon.png");
+    const [imgURL, setImgURL] = useState("./assets:icon.png");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const ItemView:FC = ()  => {
             if (item.imageURL)
                 setImgURL(item.imageURL);
             else
-                setImgURL("./assets/icon.png");
+                setImgURL('asset:/adaptive-icon.png');
         }).catch((result) => {
             console.log("ERROR", result);
         });
@@ -62,6 +62,7 @@ const ItemView:FC = ()  => {
             </View>
             <View style={styles.itemText}>
                 <Text style={styles.itemArtistText}>{itemObj.museumTitle}</Text>
+                <Text style={styles.itemDescriptionText}>{itemObj.itemDescription}</Text>
             </View>
         </View>
         </ScrollView>
@@ -92,6 +93,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign:'center',
         fontWeight: '400',
+        color: '#fff',
+    },
+    itemDescriptionText: {
+        marginTop: 20,
+        fontSize: 16,
+        textAlign: 'center',
+        fontWeight: '300',
         color: '#fff',
     },
     itemImage: {

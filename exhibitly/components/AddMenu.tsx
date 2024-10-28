@@ -10,7 +10,7 @@ export const AddMenu:FC = ({museum, itemId, itemObj}) => {
     const navigate = useNavigate();
 
     const isItemInCollection = (collection:object, museum:string, itemId:string) => {
-        if ('items' in Object.keys(collection))
+        if ('items' in collection)
             return collection.items.some((item) => (item['item_id'] === itemId && item['museum'] === museum));
         return false;
     }

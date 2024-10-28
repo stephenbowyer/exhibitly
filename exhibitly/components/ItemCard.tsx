@@ -22,21 +22,26 @@ const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
         return () => subscription?.remove();
     });
 
-    const imgURL = itemObj.imageURL;
     return (
         <View style={styles.item}>
-            <Link to={`/item/${itemObj.museum}/${itemObj.id}`}>
-            <Image style={styles.itemImage} source={{ uri: imgURL }} />
-            </Link>
-            <View style={styles.itemAdd}>
-                <Pressable style={styles.itemAddPress}>
-                    <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj}/>
-                </Pressable>
-            </View>
+            {(typeof itemObj === 'object' && 'imageURL' in itemObj && 'museum' in itemObj) ?
+                <>
+                    <Link to={`/item/${itemObj.museum}/${itemObj.id}`}>
+                        <Image style={styles.itemImage} source={{ uri: itemObj.imageURL }} /> 
+                    </Link>
+                    <View style={styles.itemAdd}>
+                        <Pressable style={styles.itemAddPress}>
+                            <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj}/>
+                        </Pressable>
+                    </View> 
+                </> : 
+                <>
+                    <Image style={styles.itemImage} source={{ uri: 'asset:/adaptive-icon.png' }} />
+                </>
+            }
         </View>
     )
 }
-//                    <Text style={styles.itemAddText}>Add</Text>
 
 const styles = StyleSheet.create({
     item: {
