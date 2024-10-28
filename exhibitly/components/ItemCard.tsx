@@ -2,6 +2,7 @@ import React, {FC, useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, Pressable, Dimensions} from 'react-native';
 import {Link} from "react-router-native";
 import {ItemsArray} from '../utils';
+import AddMenu from "./AddMenu";
 
 const windowDimensions = Dimensions.get('window');
 
@@ -29,12 +30,13 @@ const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
             </Link>
             <View style={styles.itemAdd}>
                 <Pressable style={styles.itemAddPress}>
-                    <Text style={styles.itemAddText}>Add</Text>
+                    <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj}/>
                 </Pressable>
             </View>
         </View>
     )
 }
+//                    <Text style={styles.itemAddText}>Add</Text>
 
 const styles = StyleSheet.create({
     item: {
