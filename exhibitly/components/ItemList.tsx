@@ -115,7 +115,6 @@ const ItemList:FC = ()  => {
 const styles = StyleSheet.create({
     collections: {
       paddingVertical: 20,
-      flex: 1,
       alignItems: 'center',
       flexDirection: 'row',
       flexWrap: 'wrap',
