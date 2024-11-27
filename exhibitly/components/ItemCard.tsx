@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
     itemImage: {
         borderRadius: 15,
         resizeMode: 'cover',
+        // width: '30%',
+        // height: '30%',
         width: (windowDimensions.width - 30) / 3,
         height: (windowDimensions.width - 30) / 3,
         borderWidth: 2.5,

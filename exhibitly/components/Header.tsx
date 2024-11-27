@@ -1,18 +1,7 @@
 import React, {FC, useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Dimensions} from 'react-native';
-const windowDimensions = Dimensions.get('window');
 
 const Header:FC = ()  => {
-    const [dimensions, setDimensions] = useState({window: windowDimensions});
-
-    useEffect(() => {
-      const subscription = Dimensions.addEventListener(
-        'change',
-        ({window}) => {setDimensions({window})},
-      );
-      return () => subscription?.remove();
-    });
-
     return (
         <View style={styles.header}>
         <Text style={styles.headerText}>exhibitly</Text>
@@ -25,7 +14,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#3030dd',
       color: '#fff',
-      width: windowDimensions.width,
+      width: '100%',
     },
     headerText: {
       fontSize: 20,

@@ -1,9 +1,7 @@
 import React, {FC, useEffect, useContext} from 'react';
-import {StyleSheet, View, Text, Image, Pressable, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Image, Pressable} from 'react-native';
 import {useNavigate} from "react-router-native";
 import UserDataContext from "../contexts/UserData";
-
-const windowDimensions = Dimensions.get('window');
 
 export const CollectionMenu:FC = ({back = true, create = true, search = true, setSearchBoxOpen}) => {
     const {userData, setUserData} = useContext(UserDataContext);
@@ -33,7 +31,7 @@ export const CollectionMenu:FC = ({back = true, create = true, search = true, se
 
 const styles = StyleSheet.create({
     buttons: {
-        width: windowDimensions.width,
+        width: '100%',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',

@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
     scrollView: {
     },
     item: {
-        width: windowDimensions.width,
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },
     itemText: {
-        width: windowDimensions.width,
+        width: '100%',
         textAlign:'center',
         alignItems: 'center',
         justifyContent: 'center',
