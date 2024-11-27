@@ -114,7 +114,7 @@ export const fetchAllItems = (start:number = 0, searchQuery:string = '') => {
 
 export const fetchItems = (museumName:string = museumList[0], start:number = 0, searchQuery:string = '') => {
     const museum = museums[museumName];
-    const queryParams = {params: {has_image: 1, limit: 21, skip: start, page: Math.floor(start/10)}, fields: `id, title, ${museum.imageField}, ${museum.artistField}, ${museum.yearField}, ${museum.descriptionField}`};
+    const queryParams = {params: {has_image: 1, limit: 12, skip: start, page: Math.floor(start/10)}, fields: `id, title, ${museum.imageField}, ${museum.artistField}, ${museum.yearField}, ${museum.descriptionField}`};
     if (searchQuery.length > 0)
         queryParams.params['q'] = searchQuery;
     return museum.api.get(museum['searchEndpoint'], queryParams)
