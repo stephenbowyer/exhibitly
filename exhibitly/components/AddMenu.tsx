@@ -1,12 +1,12 @@
-import React, {FC, useEffect, useContext} from 'react';
-import {StyleSheet, View, Text, Image, Pressable, Dimensions} from 'react-native';
+import React, {FC, useEffect, useContext, useState} from 'react';
+import {StyleSheet, Text} from 'react-native';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import {useNavigate} from "react-router-native";
 import UserDataContext from "../contexts/UserData";
 
 export const AddMenu:FC = ({museum, itemId, itemObj}) => {
     const {userData, setUserData} = useContext(UserDataContext);
-
+    const [inACollection, setInACollection] = useState(false);
     const navigate = useNavigate();
 
     const isItemInCollection = (collection:object, museum:string, itemId:string) => {
@@ -14,26 +14,50 @@ export const AddMenu:FC = ({museum, itemId, itemObj}) => {
             return collection.items.some((item) => (item['item_id'] === itemId && item['museum'] === museum));
         return false;
     }
+    const isItemInACollection = (museum:string, itemId:string) => {
+        return userData.customCollections?.some((currCollection) => (isItemInCollection(currCollection, museum, itemId)));
+    }
     const addToCollection = (collection:object) => {
         if (!isItemInCollection(collection, museum, itemId)){
+            itemObj['museum'] = museum;
+            itemObj['item_id'] = itemId;
             collection.items.push(itemObj);
             setUserData(userData);
         }
     }
+    const removeFromCollection = (collection:object) => {
+        const newItems = [...collection.items];
+        collection.items = newItems.filter((item) => item['item_id'] != itemId);
+        setUserData(userData);
+    }
+    useEffect(() => {
+        setInACollection(isItemInACollection(museum, itemId));
+    }, [userData, inACollection]);
+
     return (
         <Menu>
         <MenuTrigger>
-            <Text style={styles.itemAddText}>Add</Text>
+            <Text style={styles.itemAddText}>{inACollection ? <>Remove</> : <>Add</>}</Text>
         </MenuTrigger>
         <MenuOptions>
-            {userData.customCollections?.map((collection, index) => {
+            {!inACollection ?
+                userData.customCollections?.map((collection, index) => {
                     if (!isItemInCollection(collection, museum, itemId))
-                        return (<MenuOption key={index} text={`Add to ${collection.name}`} onSelect={() => {addToCollection(collection)}}/>)
-                })
+                        return (<MenuOption key={index} text={`Add to ${collection.name}`} onSelect={() => {addToCollection(collection); setInACollection(true);}}/>)
+                    })
+                :
+                userData.customCollections?.map((collection, index) => {
+                    if (isItemInCollection(collection, museum, itemId))
+                        return (<MenuOption key={index} text={`Remove from ${collection.name}`} onSelect={() => {removeFromCollection(collection); setInACollection(false);}}/>)
+                    })
             }
-            <MenuOption text='' onSelect={() => {navigate('/create')}}>
-                <Text style={styles.addCollection}>Create New Collection</Text>
-            </MenuOption>
+            {!inACollection ?
+                <MenuOption text='' onSelect={() => {navigate('/create')}}>
+                    <Text style={styles.addCollection}>Create New Collection</Text>
+                </MenuOption>
+                :
+                <></>
+            }
         </MenuOptions>
       </Menu>
     );
