@@ -11,11 +11,6 @@ const CollectionList:FC = ()  => {
     const {systemData, setSystemData} = useContext(SystemDataContext);
     const {userData, setUserData} = useContext(UserDataContext);
 
-    // const loadItems = () => {
-    //     setUserData({username: 'Stephen', secret: '',
-    //         customCollections: [{name: 'Collection A', items: []}]
-    //     });
-    // }
     const savePosition = (event) => {
         const newSystemData = systemData;
         newSystemData['collectionOffset'] = event.nativeEvent.contentOffset;

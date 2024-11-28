@@ -4,7 +4,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import {useNavigate} from "react-router-native";
 import UserDataContext from "../contexts/UserData";
 
-export const AddMenu:FC = ({museum, itemId, itemObj}) => {
+export const AddMenu:FC = ({museum, itemId, itemObj, setUpdatedData}) => {
     const {userData, setUserData} = useContext(UserDataContext);
     const [inACollection, setInACollection] = useState(false);
     const navigate = useNavigate();
@@ -21,18 +21,20 @@ export const AddMenu:FC = ({museum, itemId, itemObj}) => {
         if (!isItemInCollection(collection, museum, itemId)){
             itemObj['museum'] = museum;
             itemObj['item_id'] = itemId;
+            itemObj['in_collection'] = true;
             collection.items.push(itemObj);
-            setUserData(userData);
+            setUserData({...userData});
         }
     }
     const removeFromCollection = (collection:object) => {
         const newItems = [...collection.items];
         collection.items = newItems.filter((item) => item['item_id'] != itemId);
-        setUserData(userData);
+        setUserData({...userData});
+        setUpdatedData(itemId);
     }
     useEffect(() => {
         setInACollection(isItemInACollection(museum, itemId));
-    }, [userData, inACollection]);
+    }, [userData, inACollection, itemObj.in_collection]);
 
     return (
         <Menu>

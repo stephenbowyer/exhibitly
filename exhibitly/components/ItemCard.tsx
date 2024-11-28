@@ -11,7 +11,7 @@ interface ItemCardProps {
     key: number;
 }
 
-const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
+const ItemCard:FC<ItemCardProps> = ({itemObj, setUpdatedData})  => {
     const [dimensions, setDimensions] = useState({window: windowDimensions});
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const ItemCard:FC<ItemCardProps> = ({itemObj})  => {
                     </Link>
                     <View style={styles.itemAdd}>
                         <Pressable style={styles.itemAddPress}>
-                            <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj}/>
+                            <AddMenu museum={itemObj.museum} itemId={itemObj.id} itemObj={itemObj} setUpdatedData={setUpdatedData}/>
                         </Pressable>
                     </View> 
                 </> : 

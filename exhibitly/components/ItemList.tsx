@@ -19,27 +19,40 @@ const ItemList:FC = ()  => {
     const [searchBoxOpen, setSearchBoxOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [lastSearchQuery, setLastSearchQuery] = useState('');
+    const [updatedData, setUpdatedData] = useState(0);
 
-
+    const clearItems = () => {
+        allItems.length = 0;
+        setAllItems(new Array());
+        setTitleText('All Items')
+        if ('itemListLength' in systemData){
+            const newSystemData = {...systemData};
+            delete newSystemData['itemListLength'];
+            setSystemData(newSystemData);
+        }
+    }
     const loadItems = () => {
-        if (!('username' in userData))
-            setUserData({username: 'Stephen', secret: '',
-                customCollections: [{name: 'Collection A', items: []}]
-            });
- 
-        if (!('itemListLength' in systemData) || (systemData['itemListLength'] < allItems.length)){
+        if (!('username' in userData)){
+            userData['username'] = 'User';
+            userData['secret'] = '';
+            userData['customCollections'] = [{name: 'My First Collection', items: []}];
+            setUserData(userData);
+        }
+        if (!('itemListLength' in systemData) || (systemData['itemListLength'] < allItems.length) ||
+            (typeof collection_id === 'undefined')){
             const newSystemData = systemData;
+            const currItems = allItems?.filter((item) => (('in_collection' in item) && (item.in_colllection === true)));
             setLoading(true);
             systemData['itemListLength'] = allItems.length;
-            fetchAllItems(allItems.length+1, searchQuery).then((items) => {
-                shuffleItems(items);
+            fetchAllItems(currItems.length+1, searchQuery).then((items) => {
+                //shuffleItems(items);
                 if (typeof items[0] === 'object' && ('id' in items[0]))
-                    setAllItems([...new Set([...allItems, ...items])]);
+                    setAllItems([...new Set([...currItems, ...items])]);
                 else
-                    setAllItems([...new Set([...allItems, ...items.flat()])]);
+                    setAllItems([...new Set([...currItems, ...items.flat()])]);
                 setLoading(false);
             }).catch((result) => {
-                console.log("ERROR", result); //[AxiosError: Request failed with status code 404]
+                setTitleText("ERROR: "+result+" Please Reload"); //[AxiosError: Request failed with status code 404]
                 setLoading(false);
             });
         }
@@ -52,9 +65,14 @@ const ItemList:FC = ()  => {
             loadItems();
     }
     useEffect(() => {
+        if (collection_id)
+            setAllItems(allItems.filter((item) => item.item_id !== updatedData));
+    }, [updatedData])
+    useEffect(() => {
         if (collection_id){
             systemData['collectionLoads'] = 0;
-            systemData['backupItems'] = allItems;
+            if (userData['customCollections'][collection_id].items.length !== allItems.length)
+                systemData['backupItems'] = allItems;
             setSystemData(systemData);
             setAllItems(userData['customCollections'][collection_id].items);
             setTitleText(userData['customCollections'][collection_id].name);
@@ -67,24 +85,24 @@ const ItemList:FC = ()  => {
                 setAllItems(new Array());
                 if ('itemListLength' in systemData)
                     delete systemData['itemListLength'];
-                systemData['collectionLoads'] === 0;
+                systemData['collectionLoads'] = 0;
                 setSystemData(systemData);
             }
             if ((systemData['collectionLoads'] === 0) || (allItems.length === 0)){
                 if ('backupItems' in systemData && systemData['backupItems'].length > 0){
                     setLoading(true);
+                    if ('itemListLength' in systemData && systemData['itemListLength'] < allItems.length){
+                        newSystemData = {...systemData};
+                        newSystemData['itemListLength'] = 0;
+                        setSystemData(newSystemData);
+                    }
                     setAllItems(...systemData['backupItems']);
-                    //systemData['backupItems'] = new Array();
                     loadItems();
                     setLoading(false);
                 }
                 else
                 {
-                    allItems.length = 0;
-                    setAllItems(new Array());
-                    if ('itemListLength' in systemData)
-                        delete systemData['itemListLength'];
-                    setSystemData(systemData);
+                    clearItems();
                     loadItems();
                 }
                 systemData['collectionLoads']++;
@@ -94,8 +112,15 @@ const ItemList:FC = ()  => {
                 else
                     setTitleText('Search Results')
             }
+            else
+            {
+                clearItems();
+                loadItems();
+                systemData['collectionLoads'] = 0;
+                setSystemData(systemData);
+            }
         }
-    }, [searchQuery]);
+    }, [searchQuery, collection_id]);
     return (
         <ScrollView style={styles.scrollView} onScroll={savePosition} contentOffset={systemData['itemListOffset']}>
             <CollectionMenu setSearchBoxOpen={setSearchBoxOpen} />
@@ -103,7 +128,7 @@ const ItemList:FC = ()  => {
             <Text style={styles.collectionTitle}>{titleText}</Text>
             { (typeof allItems === 'object' && allItems.length > 0) ?
                 <View style={styles.collections}>
-                    {allItems?.map((item, index) => <ItemCard style={styles.card} itemObj={item} key={index} />)}
+                    {allItems?.map((item, index) => <ItemCard style={styles.card} itemObj={item} key={index} setUpdatedData={setUpdatedData}/>)}
                 </View> :
                 <></>
             }
